@@ -57,6 +57,7 @@ void movefor(double distance, enum vex::directionType dir) {
   
 }
 
+// This runs in autonomous
 void autonomous(void) {
   LeftWheels.spinFor(forward, -720, degrees, false);
   RightWheels.spinFor(forward, 720, degrees, false);
