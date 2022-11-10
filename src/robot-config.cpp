@@ -16,6 +16,7 @@ motor LeftWheelsMotorA = motor(PORT12, ratio18_1, false);
 motor LeftWheelsMotorB = motor(PORT20, ratio18_1, false);
 motor_group LeftWheels = motor_group(LeftWheelsMotorA, LeftWheelsMotorB);
 optical Optical4 = optical(PORT4);
+motor IntakeMotor = motor(PORT16, ratio18_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

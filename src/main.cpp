@@ -5,6 +5,24 @@
 // RightWheels          motor_group   1, 11           
 // LeftWheels           motor_group   12, 20          
 // Optical4             optical       4               
+// IntakeMotor          motor         16              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// RightWheels          motor_group   1, 11           
+// LeftWheels           motor_group   12, 20          
+// Optical4             optical       4               
+// Motor16              motor         16              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// RightWheels          motor_group   1, 11           
+// LeftWheels           motor_group   12, 20          
+// Optical4             optical       4               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -71,6 +89,10 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
+void runintake(void) {
+  IntakeMotor.spinFor(forward, 1000, degrees);
+}
+
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              Autonomous Task                              */
@@ -113,6 +135,10 @@ void usercontrol(void) {
       x = 0;
     } else if (y >= -threshold && y <= threshold) {
       y = 0;
+    }
+
+    if (Controller1.ButtonX.pressing()) {
+      runintake();
     }
 
     int leftSpeed = y + x;
