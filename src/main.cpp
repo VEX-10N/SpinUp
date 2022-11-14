@@ -90,10 +90,17 @@ competition Competition;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
+bool intakeRunning = false;
+
+
+void intake_pressed() {
+  intakeRunning = !intakeRunning;
+}
+
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-
+  Controller1.ButtonL1.pressed(intake_pressed);
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -108,7 +115,7 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void movefor(double distance, enum vex::directionType dir) {
+void move_for(double distance, enum vex::directionType dir) {
   double degreeToDistance = 4 * M_PI;
   
 }
@@ -142,7 +149,7 @@ void usercontrol(void) {
       y = 0;
     }
 
-    if (Controller1.ButtonR2.pressing()) {
+    if (intakeRunning) {
       IntakeMotor.setVelocity(100, percent);
     } else {
       IntakeMotor.setVelocity(0, percent);
