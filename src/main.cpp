@@ -6,6 +6,16 @@
 // LeftWheels           motor_group   12, 20          
 // Optical4             optical       4               
 // IntakeMotor          motor         16              
+// RollerMotor          motor         17              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// RightWheels          motor_group   1, 11           
+// LeftWheels           motor_group   12, 20          
+// Optical4             optical       4               
+// IntakeMotor          motor         16              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -101,6 +111,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Controller1.ButtonL1.pressed(intake_pressed);
+  RollerMotor.setVelocity(40, percent);
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -116,14 +127,14 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void move_for(double distance, enum vex::directionType dir) {
-  double degreeToDistance = 4 * M_PI;
-  
+  double degreesToDistance = 4 * M_PI * distance;
+  LeftWheels.spinFor(forward, -degreesToDistance, degrees, false);
+  RightWheels.spinFor(forward, degreesToDistance, degrees, false);
 }
 
 // This runs in autonomous
 void autonomous(void) {
-  LeftWheels.spinFor(forward, -720, degrees, false);
-  RightWheels.spinFor(forward, 720, degrees, false);
+  
 }
 
 /*---------------------------------------------------------------------------*/
@@ -155,6 +166,12 @@ void usercontrol(void) {
       IntakeMotor.setVelocity(0, percent);
     }
     IntakeMotor.spin(reverse);
+
+    if (Controller1.ButtonL2.pressing()) {
+      RollerMotor.spin(forward);
+    } else if (Controller1.ButtonR2.pressing()) {
+      RollerMotor.spin(reverse);
+    }
 
     int leftSpeed = y + x;
     int rightSpeed = y - x;

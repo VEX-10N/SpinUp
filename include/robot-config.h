@@ -8,6 +8,7 @@ extern motor_group RightWheels;
 extern motor_group LeftWheels;
 extern optical Optical4;
 extern motor IntakeMotor;
+extern motor RollerMotor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
