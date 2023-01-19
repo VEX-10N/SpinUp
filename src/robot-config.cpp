@@ -9,15 +9,14 @@ brain  Brain;
 
 // VEXcode device constructors
 controller Controller1 = controller(primary);
-motor RightWheelsMotorA = motor(PORT1, ratio18_1, false);
-motor RightWheelsMotorB = motor(PORT11, ratio18_1, false);
+motor RightWheelsMotorA = motor(PORT17, ratio18_1, false);
+motor RightWheelsMotorB = motor(PORT19, ratio18_1, false);
 motor_group RightWheels = motor_group(RightWheelsMotorA, RightWheelsMotorB);
-motor LeftWheelsMotorA = motor(PORT12, ratio18_1, false);
+motor LeftWheelsMotorA = motor(PORT18, ratio18_1, false);
 motor LeftWheelsMotorB = motor(PORT20, ratio18_1, false);
 motor_group LeftWheels = motor_group(LeftWheelsMotorA, LeftWheelsMotorB);
-optical Optical4 = optical(PORT4);
-motor IntakeMotor = motor(PORT16, ratio18_1, false);
-motor RollerMotor = motor(PORT17, ratio18_1, false);
+motor CataMotor = motor(PORT14, ratio18_1, false);
+motor RollerMotor = motor(PORT5, ratio36_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
