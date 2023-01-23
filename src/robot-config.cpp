@@ -15,8 +15,8 @@ motor_group RightWheels = motor_group(RightWheelsMotorA, RightWheelsMotorB);
 motor LeftWheelsMotorA = motor(PORT18, ratio18_1, false);
 motor LeftWheelsMotorB = motor(PORT20, ratio18_1, false);
 motor_group LeftWheels = motor_group(LeftWheelsMotorA, LeftWheelsMotorB);
-motor CataMotor = motor(PORT14, ratio18_1, false);
-motor RollerMotor = motor(PORT5, ratio36_1, false);
+motor CataMotor = motor(PORT10, ratio18_1, false);
+motor RollerMotor = motor(PORT5, ratio18_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
