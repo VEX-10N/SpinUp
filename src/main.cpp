@@ -28,7 +28,7 @@ int autonType = 1;
 directionType rollerDirection = fwd;
 
 //PID Auton Settings
-int desiredValue = 200;
+int desiredValue = 0;
 int desiredTurnValue = 0;
 
 // PID CONTROLLER
@@ -61,6 +61,7 @@ int drivePID() {
       LeftBack.resetPosition();
       RightFront.resetPosition();
       RightBack.resetPosition();
+      resetDriveSensors = false;
     }
 
     //Movement PID
@@ -72,7 +73,7 @@ int drivePID() {
 
     //Turning PID
     int turnDifference = ((LeftFront.position(degrees) + LeftBack.position(degrees)) / 2) - ((RightFront.position(degrees) + RightBack.position(degrees)) / 2);
-    turnError = desiredTurnValue - averagePosition;
+    turnError = desiredTurnValue - turnDifference;
     turnDerivative = turnError - turnPrevError;
     turnTotalError += turnError;
     double turnMotorPower = turnError * turnkP + turnDerivative * turnkD + turnTotalError * turnkI;
@@ -87,6 +88,24 @@ int drivePID() {
     vex::task::sleep(20);
   }
   return 1;
+}
+
+void resetPID() {
+  resetDriveSensors = true;
+}
+
+void movePID(int distance) {
+  resetPID();
+  desiredValue = distance;
+  desiredTurnValue = 0;
+  waitUntil(error == 0);
+}
+
+void rotatePID(int rotation) {
+  resetPID();
+  desiredTurnValue = rotation;
+  desiredValue = 0;
+  waitUntil(turnError = 0);
 }
 
 void change_roller_direction() {
@@ -197,6 +216,7 @@ void pre_auton(void) {
 // This runs in autonomous
 void autonomous(void) {
     task drivePIDTask(drivePID);
+    movePID(200);
 }
 
 
