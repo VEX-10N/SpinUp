@@ -1,3 +1,115 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      9               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      9               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial9            inertial      9               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial9            inertial      9               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// BumperSensor         digital_out   B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
 #include <iostream>
@@ -32,11 +144,11 @@ int desiredValue = 0;
 int desiredTurnValue = 0;
 
 // PID CONTROLLER
-bool enableDrivePID = false;
+bool enableDrivePID = true;
 
 bool resetDriveSensors = false;
 
-const double kP = 0.0;
+const double kP = 0.5;
 const double kI = 0.0;
 const double kD = 0.0;
 
@@ -53,6 +165,8 @@ int turnError;
 int turnPrevError = 0;
 int turnDerivative;
 int turnTotalError = 0;
+
+double currentDegrees = 0;
 
 int drivePID() {
   while (enableDrivePID) {
@@ -76,12 +190,12 @@ int drivePID() {
     turnError = desiredTurnValue - turnDifference;
     turnDerivative = turnError - turnPrevError;
     turnTotalError += turnError;
-    double turnMotorPower = turnError * turnkP + turnDerivative * turnkD + turnTotalError * turnkI;
+    double turnMotorPower = (turnError * turnkP + turnDerivative * turnkD + turnTotalError * turnkI);
 
     LeftFront.spin(forward, lateralMotorPower + turnMotorPower, voltageUnits::volt);
-    LeftBack.spin(forward, lateralMotorPower + turnMotorPower, voltageUnits::volt);
-    RightFront.spin(forward, lateralMotorPower - turnMotorPower, voltageUnits::volt);
-    RightBack.spin(forward, lateralMotorPower - turnMotorPower, voltageUnits::volt);
+    LeftBack.spin(forward,  lateralMotorPower + turnMotorPower, voltageUnits::volt);
+    RightFront.spin(reverse, lateralMotorPower - turnMotorPower, voltageUnits::volt);
+    RightBack.spin(reverse, lateralMotorPower - turnMotorPower, voltageUnits::volt);
 
     prevError = error;
     turnPrevError = turnError;
@@ -97,15 +211,23 @@ void resetPID() {
 void movePID(int distance) {
   resetPID();
   desiredValue = distance;
-  desiredTurnValue = 0;
   waitUntil(error == 0);
+  desiredValue = 0;
 }
 
 void rotatePID(int rotation) {
   resetPID();
   desiredTurnValue = rotation;
-  desiredValue = 0;
-  waitUntil(turnError = 0);
+  waitUntil(turnError == 0);
+  desiredTurnValue = 0;
+}
+
+void fire_cata() {
+  CataMotor.spin(forward, 200, rpm);
+  task::sleep(500);
+  waitUntil(DigitalInB.value() == 0);
+  std::cout << "mank" << std::endl;
+  CataMotor.stop();
 }
 
 void change_roller_direction() {
@@ -186,18 +308,41 @@ void reset_from_intake() {
   CataMotor.spinFor(forward, 1856, degrees);
 }
 
+void move_for(int distance, int speed,bool waitForCompletion) {
+  int gear = 84/36;
+  LeftFront.spinFor(reverse, gear * M_PI * 4 * distance, degrees, speed, rpm,  false);
+  LeftBack.spinFor(reverse, gear * M_PI * 4 * distance, degrees, speed, rpm, false);
+  RightFront.spinFor(forward, gear * M_PI * 4 * distance, degrees, speed, rpm, false);
+  RightBack.spinFor(forward, gear * M_PI * 4 * distance, degrees, speed, rpm, waitForCompletion);
+}
+
+void turn_to(double desired) {
+  LeftFront.spin(reverse, 20, rpm);
+  LeftBack.spin(reverse, 20, rpm);
+  RightFront.spin(reverse, 20, rpm);
+  RightBack.spin(reverse, 20, rpm);
+  std::cout << Inertial.heading(degrees) << std::endl;
+  waitUntil(fabs(desired - Inertial.heading(degrees)) < 2);
+  std::cout << Inertial.heading(degrees) << std::endl;
+  LeftFront.stop();
+  LeftBack.stop();
+  RightFront.stop();
+  RightBack.stop();
+}
+
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   RollerMotor.setVelocity(200, rpm);
   Controller1.ButtonR1.pressed(start_stop_roller);
   Controller1.ButtonR2.pressed(change_roller_direction);
-  Controller1.ButtonL1.pressed(calibrateCata);
+  Controller1.ButtonL2.pressed(fire_cata);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
   RightFront.setStopping(brake);
   RightBack.setStopping(brake);
+  Inertial.calibrate();
   drawGUI();
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -215,8 +360,28 @@ void pre_auton(void) {
 
 // This runs in autonomous
 void autonomous(void) {
-    task drivePIDTask(drivePID);
-    movePID(200);
+  waitUntil(!Inertial.isCalibrating());
+  if (autonType == 1 || autonType == 2) {
+    move_for(13, 40,  true);
+    task::sleep(2000);
+    std::cout << "mank" << std::endl;
+    turn_to(90);
+    task::sleep(2000);
+    move_for(4, 10, false);
+    task::sleep(2000);
+    if (autonType == 1) {
+      RollerMotor.spinFor(forward, 160, degrees);
+    } else {
+      RollerMotor.spinFor(reverse, 160, degrees);
+    }
+  } if (autonType == 3 || autonType == 4) {
+    task::sleep(2000);
+    if (autonType == 3) {
+      RollerMotor.spinFor(forward, 160, degrees);
+    } else {
+      RollerMotor.spinFor(reverse, 160, degrees);
+    }
+  }
 }
 
 
@@ -243,10 +408,8 @@ void usercontrol(void) {
       y = 0;
     }
 
-    if (Controller1.ButtonL2.pressing()) {
+    if (Controller1.ButtonL1.pressing()) {
       CataMotor.spin(forward, 100, rpm);
-    } else {
-      CataMotor.stop(brake);
     }
 
     int leftSpeed = y + x;
