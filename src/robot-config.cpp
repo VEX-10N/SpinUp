@@ -13,8 +13,8 @@ motor CataMotor = motor(PORT10, ratio18_1, false);
 motor RollerMotor = motor(PORT5, ratio18_1, false);
 motor RightFront = motor(PORT17, ratio18_1, false);
 motor RightBack = motor(PORT19, ratio18_1, false);
-motor LeftFront = motor(PORT18, ratio18_1, false);
-motor LeftBack = motor(PORT20, ratio18_1, false);
+motor LeftFront = motor(PORT18, ratio18_1, true);
+motor LeftBack = motor(PORT20, ratio18_1, true);
 digital_in DigitalInB = digital_in(Brain.ThreeWirePort.B);
 inertial Inertial = inertial(PORT3);
 
