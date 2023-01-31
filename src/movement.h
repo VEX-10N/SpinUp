@@ -41,6 +41,7 @@ void move_for(int distance, int speed,bool waitForCompletion) {
 void turn_to(double desired) {
   double error = fabs(desired - Inertial.heading(degrees));
   while (error > 2) {
+    error = fabs(desired - Inertial.heading(degrees));
     double speed = error * 0.4;
     LeftFront.spin(forward, speed, rpm);
     LeftBack.spin(forward, speed, rpm);
