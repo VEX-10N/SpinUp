@@ -154,7 +154,7 @@ void pre_auton(void) {
 // This runs in autonomous
 void autonomous(void) {
   waitUntil(!Inertial.isCalibrating());
-  forwardPID(100, 50);
+  forwardPID(500, 25);
   /*if (autonType == 1 || autonType == 2) {
     move_for(13, 40,  true);
     task::sleep(2000);

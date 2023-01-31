@@ -3,8 +3,8 @@
 
 using namespace vex;
 
-const double kP = 0;
-const double kD = 0;
+const double kP = 2.3;
+const double kD = 0.8;
 
 const double turnkP = 0;
 const double turnkD = 0;
@@ -30,6 +30,7 @@ double lateralPIDCycle(double targetDistance, double maxSpeed) {
     speed = 0;
   }
   prevError = error;
+  std::cout << speed << std::endl;
   return speed;
 }
 
