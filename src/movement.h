@@ -39,13 +39,15 @@ void move_for(int distance, int speed,bool waitForCompletion) {
 }
 
 void turn_to(double desired) {
-  LeftFront.spin(forward, 20, rpm);
-  LeftBack.spin(forward, 20, rpm);
-  RightFront.spin(reverse, 20, rpm);
-  RightBack.spin(reverse, 20, rpm);
-  std::cout << Inertial.heading(degrees) << std::endl;
-  waitUntil(fabs(desired - Inertial.heading(degrees)) < 2);
-  std::cout << Inertial.heading(degrees) << std::endl;
+  double error = fabs(desired - Inertial.heading(degrees));
+  while (error > 2) {
+    double speed = error * 0.4;
+    LeftFront.spin(forward, speed, rpm);
+    LeftBack.spin(forward, speed, rpm);
+    RightFront.spin(reverse, speed , rpm);
+    RightBack.spin(reverse, speed, rpm);
+    task::sleep(10);
+  }
   LeftFront.stop();
   LeftBack.stop();
   RightFront.stop();
