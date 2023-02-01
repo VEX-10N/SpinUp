@@ -43,10 +43,20 @@ void turn_to(double desired) {
   while (error > 2) {
     error = fabs(desired - Inertial.heading(degrees));
     double speed = error * 0.4;
-    LeftFront.spin(forward, speed, rpm);
-    LeftBack.spin(forward, speed, rpm);
-    RightFront.spin(reverse, speed , rpm);
-    RightBack.spin(reverse, speed, rpm);
+    if (speed < 10) {
+      speed = 10;
+    }
+    if (desired < 0) {
+      LeftFront.spin(reverse, speed, rpm);
+      LeftBack.spin(reverse, speed, rpm);
+      RightFront.spin(forward, speed , rpm);
+      RightBack.spin(forward, speed, rpm);
+    } else {
+      LeftFront.spin(forward, speed, rpm);
+      LeftBack.spin(forward, speed, rpm);
+      RightFront.spin(reverse, speed , rpm);
+      RightBack.spin(reverse, speed, rpm);
+    }
     task::sleep(10);
   }
   LeftFront.stop();
