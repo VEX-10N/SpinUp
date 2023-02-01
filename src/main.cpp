@@ -26,6 +26,7 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
+#include <sstream>
 #include <iostream>
 #include "pid.h"
 
@@ -97,11 +98,39 @@ void drawGUI() {
   }
   Brain.Screen.drawCircle(150, 150, 50);
   Brain.Screen.setFillColor(transparent);
+  std::ostringstream ss;
+  ss << autonType;
   if (autonType == 1) Brain.Screen.printAt(150, 80, "1");
   if (autonType == 2) Brain.Screen.printAt(150, 80, "2");
   if (autonType == 3) Brain.Screen.printAt(150, 80, "3");
   if (autonType == 4) Brain.Screen.printAt(150, 80, "4");
   if (autonType == 5) Brain.Screen.printAt(150, 80, "5");
+  if (autonType == 6) Brain.Screen.printAt(150, 80, "6");
+}
+
+void drawGUIController() {
+  Controller1.Screen.clearScreen();
+  Controller1.Screen.setCursor(1, 1);
+  std::ostringstream ss;
+  ss << autonType;
+  Controller1.Screen.print("Auton Mode: " + ss.str());
+  Controller1.Screen.setCursor(2, 1);
+  ss << Brain.Battery.capacity(pct);
+  Controller1.Screen.print("Battery: " + ss.str());
+  Controller1.Screen.setCursor(3, 1);
+  Controller1.Screen.print("> Change < Lock");
+}
+
+void increaseAutonMode() {
+  if (autonType >= 6) {
+    autonType = 1;
+  } else {
+    autonType++;
+  }
+}
+
+void lockInAutonMode() {
+  selectingAuton = false;
 }
 
 void screenPressed() {
@@ -110,17 +139,14 @@ void screenPressed() {
   if (!selectingAuton) return;
   if (x >= 300 && x <= 400) {
     if (y >= 50 && y <= 100) {
-      if (autonType >= 5) {
-        autonType = 1;
-      } else {
-        autonType++;
-      }
+      increaseAutonMode();
     } 
     if (y >= 150 && y <= 200) {
-      selectingAuton = false;
+      lockInAutonMode();
     }
   }
   drawGUI();
+  drawGUIController();
 }
 
 void pre_auton(void) {
@@ -130,6 +156,8 @@ void pre_auton(void) {
   Controller1.ButtonR1.pressed(start_stop_roller);
   Controller1.ButtonR2.pressed(change_roller_direction);
   Controller1.ButtonL2.pressed(fire_cata);
+  Controller1.ButtonRight.pressed(increaseAutonMode);
+  Controller1.ButtonLeft.pressed(lockInAutonMode);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
@@ -137,6 +165,7 @@ void pre_auton(void) {
   RightBack.setStopping(brake);
   Inertial.calibrate();
   drawGUI();
+  drawGUIController();
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
