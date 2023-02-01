@@ -1,5 +1,5 @@
 # SpinUp
-10A'code from VEX's 2023 season "Spin Up"
+#### 10A's code from VEX's 2023 season "Spin Up"
 
 ### main.cpp
 Code for auton and driver control
