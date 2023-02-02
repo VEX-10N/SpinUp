@@ -146,7 +146,7 @@ void drawGUIController() {
   if (autonType == 5) Controller1.Screen.print("Auton Mode 5");
   if (autonType == 6) Controller1.Screen.print("Auton Mode 6");
   Controller1.Screen.setCursor(2, 1);
-  Controller1.Screen.print("A: Change B: Lock");
+  Controller1.Screen.print("A: Change X: Lock");
   Controller1.Screen.setCursor(3, 1);
   if (!selectingAuton) {
     Controller1.Screen.print("Locked In"); 
@@ -194,7 +194,7 @@ void pre_auton(void) {
   Controller1.ButtonR2.pressed(change_roller_direction);
   Controller1.ButtonL2.pressed(fire_cata);
   Controller1.ButtonA.pressed(increaseAutonMode);
-  Controller1.ButtonB.pressed(lockInAutonMode);
+  Controller1.ButtonX.pressed(lockInAutonMode);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
