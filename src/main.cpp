@@ -24,6 +24,32 @@
 // DigitalInB           digital_in    B               
 // Inertial             inertial      3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
 #include <sstream>
@@ -50,17 +76,19 @@ competition Competition;
 bool rollerRunning = false;
 bool cataRunning = false;
 bool selectingAuton = true;
-bool calibratingCata = false;
+bool firingCata = false;
 double initialDegree;
 int autonType = 1;
 directionType rollerDirection = fwd;
 
 void fire_cata() {
-  CataMotor.spin(forward, 200, rpm);
+  firingCata = true;
+  CataMotor.spin(forward, 100, rpm);
   task::sleep(500);
+  std::cout << DigitalInB.value() << std::endl;
   waitUntil(DigitalInB.value() == 0);
-  std::cout << "mank" << std::endl;
   CataMotor.stop();
+  firingCata = false;
 }
 
 void change_roller_direction() {
@@ -111,26 +139,37 @@ void drawGUI() {
 void drawGUIController() {
   Controller1.Screen.clearScreen();
   Controller1.Screen.setCursor(1, 1);
-  std::ostringstream ss;
-  ss << autonType;
-  Controller1.Screen.print("Auton Mode: " + ss.str());
+  if (autonType == 1) Controller1.Screen.print("Auton Mode 1");
+  if (autonType == 2) Controller1.Screen.print("Auton Mode 2");
+  if (autonType == 3) Controller1.Screen.print("Auton Mode 3");
+  if (autonType == 4) Controller1.Screen.print("Auton Mode 4");
+  if (autonType == 5) Controller1.Screen.print("Auton Mode 5");
+  if (autonType == 6) Controller1.Screen.print("Auton Mode 6");
   Controller1.Screen.setCursor(2, 1);
-  ss << Brain.Battery.capacity(pct);
-  Controller1.Screen.print("Battery: " + ss.str());
+  Controller1.Screen.print("A: Change B: Lock");
   Controller1.Screen.setCursor(3, 1);
-  Controller1.Screen.print("> Change < Lock");
+  if (!selectingAuton) {
+    Controller1.Screen.print("Locked In"); 
+  } else {
+    Controller1.Screen.print("Not Locked In");
+  }
 }
 
 void increaseAutonMode() {
+  if (!selectingAuton) return;
   if (autonType >= 6) {
     autonType = 1;
   } else {
     autonType++;
   }
+  drawGUI();
+  drawGUIController();
 }
 
 void lockInAutonMode() {
   selectingAuton = false;
+  drawGUI();
+  drawGUIController();
 }
 
 void screenPressed() {
@@ -145,8 +184,6 @@ void screenPressed() {
       lockInAutonMode();
     }
   }
-  drawGUI();
-  drawGUIController();
 }
 
 void pre_auton(void) {
@@ -156,8 +193,8 @@ void pre_auton(void) {
   Controller1.ButtonR1.pressed(start_stop_roller);
   Controller1.ButtonR2.pressed(change_roller_direction);
   Controller1.ButtonL2.pressed(fire_cata);
-  Controller1.ButtonRight.pressed(increaseAutonMode);
-  Controller1.ButtonLeft.pressed(lockInAutonMode);
+  Controller1.ButtonA.pressed(increaseAutonMode);
+  Controller1.ButtonB.pressed(lockInAutonMode);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
@@ -232,6 +269,8 @@ void usercontrol(void) {
 
     if (Controller1.ButtonL1.pressing()) {
       CataMotor.spin(forward, 100, rpm);
+    } else if (!firingCata) {
+      CataMotor.stop();
     }
 
     int leftSpeed = y + x;
