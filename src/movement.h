@@ -46,19 +46,13 @@ void turn_to(double desired) {
     if (speed < 10) {
       speed = 10;
     }
-    if (desired < 0) {
-      LeftFront.spin(reverse, speed, rpm);
-      LeftBack.spin(reverse, speed, rpm);
-      RightFront.spin(forward, speed , rpm);
-      RightBack.spin(forward, speed, rpm);
-    } else {
-      LeftFront.spin(forward, speed, rpm);
-      LeftBack.spin(forward, speed, rpm);
-      RightFront.spin(reverse, speed , rpm);
-      RightBack.spin(reverse, speed, rpm);
-    }
+    LeftFront.spin(forward, speed, rpm);
+    LeftBack.spin(forward, speed, rpm);
+    RightFront.spin(reverse, speed , rpm);
+    RightBack.spin(reverse, speed, rpm);
     task::sleep(10);
   }
+  waitUntil(error < 2);
   LeftFront.stop();
   LeftBack.stop();
   RightFront.stop();

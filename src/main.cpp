@@ -78,7 +78,7 @@ bool cataRunning = false;
 bool selectingAuton = true;
 bool firingCata = false;
 double initialDegree;
-int autonType = 1;
+int autonType = 5;
 directionType rollerDirection = fwd;
 
 void fire_cata() {
@@ -97,13 +97,13 @@ void change_roller_direction() {
   } else if (rollerDirection == reverse) {
     rollerDirection = fwd;
   }
-  RollerMotor.spin(rollerDirection, 150, rpm);
+  RollerMotor.spin(rollerDirection, 200, rpm);
 }
 
 void start_stop_roller() {
   rollerRunning = !rollerRunning;
   if (rollerRunning) {
-    RollerMotor.spin(rollerDirection, 150, rpm);
+    RollerMotor.spin(rollerDirection, 200, rpm);
   } else {
     RollerMotor.stop();
   }
@@ -221,7 +221,7 @@ void pre_auton(void) {
 void autonomous(void) {
   waitUntil(!Inertial.isCalibrating());
   forwardPID(500, 25);
-  /*if (autonType == 1 || autonType == 2) {
+  if (autonType == 1 || autonType == 2) {
     move_for(13, 40,  true);
     task::sleep(2000);
     std::cout << "mank" << std::endl;
@@ -241,7 +241,19 @@ void autonomous(void) {
     } else {
       RollerMotor.spinFor(reverse, 160, degrees);
     }
-  }*/
+  } else if (autonType == 5) {
+    Inertial.setHeading(90, degrees);
+    move_for(13, 40, true);
+    turn_to(180);
+    move_for(6, 40, false);
+    task::sleep(2000);
+    RollerMotor.spinFor(forward, 270, degrees, true);
+    move_for(-10, 40, true);
+    turn_to(270);
+    move_for(15, 40, false);
+    task::sleep(2500);
+    RollerMotor.spinFor(forward, 270, degrees, true);
+  }
 }  
 
 /*---------------------------------------------------------------------------*/
@@ -259,7 +271,7 @@ void usercontrol(void) {
   int threshold = 15;
   while (1) {
     int x = -Controller1.Axis3.position(percent);
-    int y = -Controller1.Axis1.position(percent);
+    int y = -Controller1.Axis1.position(percent) * .75;
     
     if (x >= -threshold && x <= threshold) {
       x = 0;
