@@ -24,8 +24,35 @@
 // DigitalInB           digital_in    B               
 // Inertial             inertial      3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
+#include <sstream>
 #include <iostream>
 #include "pid.h"
 
@@ -49,17 +76,19 @@ competition Competition;
 bool rollerRunning = false;
 bool cataRunning = false;
 bool selectingAuton = true;
-bool calibratingCata = false;
+bool firingCata = false;
 double initialDegree;
-int autonType = 1;
+int autonType = 5;
 directionType rollerDirection = fwd;
 
 void fire_cata() {
-  CataMotor.spin(forward, 200, rpm);
+  firingCata = true;
+  CataMotor.spin(forward, 100, rpm);
   task::sleep(500);
+  std::cout << DigitalInB.value() << std::endl;
   waitUntil(DigitalInB.value() == 0);
-  std::cout << "mank" << std::endl;
   CataMotor.stop();
+  firingCata = false;
 }
 
 void change_roller_direction() {
@@ -68,13 +97,13 @@ void change_roller_direction() {
   } else if (rollerDirection == reverse) {
     rollerDirection = fwd;
   }
-  RollerMotor.spin(rollerDirection, 150, rpm);
+  RollerMotor.spin(rollerDirection, 200, rpm);
 }
 
 void start_stop_roller() {
   rollerRunning = !rollerRunning;
   if (rollerRunning) {
-    RollerMotor.spin(rollerDirection, 150, rpm);
+    RollerMotor.spin(rollerDirection, 200, rpm);
   } else {
     RollerMotor.stop();
   }
@@ -97,11 +126,50 @@ void drawGUI() {
   }
   Brain.Screen.drawCircle(150, 150, 50);
   Brain.Screen.setFillColor(transparent);
+  std::ostringstream ss;
+  ss << autonType;
   if (autonType == 1) Brain.Screen.printAt(150, 80, "1");
   if (autonType == 2) Brain.Screen.printAt(150, 80, "2");
   if (autonType == 3) Brain.Screen.printAt(150, 80, "3");
   if (autonType == 4) Brain.Screen.printAt(150, 80, "4");
   if (autonType == 5) Brain.Screen.printAt(150, 80, "5");
+  if (autonType == 6) Brain.Screen.printAt(150, 80, "6");
+}
+
+void drawGUIController() {
+  Controller1.Screen.clearScreen();
+  Controller1.Screen.setCursor(1, 1);
+  if (autonType == 1) Controller1.Screen.print("Auton Mode 1");
+  if (autonType == 2) Controller1.Screen.print("Auton Mode 2");
+  if (autonType == 3) Controller1.Screen.print("Auton Mode 3");
+  if (autonType == 4) Controller1.Screen.print("Auton Mode 4");
+  if (autonType == 5) Controller1.Screen.print("Auton Mode 5");
+  if (autonType == 6) Controller1.Screen.print("Auton Mode 6");
+  Controller1.Screen.setCursor(2, 1);
+  Controller1.Screen.print("A: Change B: Lock");
+  Controller1.Screen.setCursor(3, 1);
+  if (!selectingAuton) {
+    Controller1.Screen.print("Locked In"); 
+  } else {
+    Controller1.Screen.print("Not Locked In");
+  }
+}
+
+void increaseAutonMode() {
+  if (!selectingAuton) return;
+  if (autonType >= 6) {
+    autonType = 1;
+  } else {
+    autonType++;
+  }
+  drawGUI();
+  drawGUIController();
+}
+
+void lockInAutonMode() {
+  selectingAuton = false;
+  drawGUI();
+  drawGUIController();
 }
 
 void screenPressed() {
@@ -110,17 +178,12 @@ void screenPressed() {
   if (!selectingAuton) return;
   if (x >= 300 && x <= 400) {
     if (y >= 50 && y <= 100) {
-      if (autonType >= 5) {
-        autonType = 1;
-      } else {
-        autonType++;
-      }
+      increaseAutonMode();
     } 
     if (y >= 150 && y <= 200) {
-      selectingAuton = false;
+      lockInAutonMode();
     }
   }
-  drawGUI();
 }
 
 void pre_auton(void) {
@@ -130,6 +193,8 @@ void pre_auton(void) {
   Controller1.ButtonR1.pressed(start_stop_roller);
   Controller1.ButtonR2.pressed(change_roller_direction);
   Controller1.ButtonL2.pressed(fire_cata);
+  Controller1.ButtonA.pressed(increaseAutonMode);
+  Controller1.ButtonB.pressed(lockInAutonMode);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
@@ -137,6 +202,7 @@ void pre_auton(void) {
   RightBack.setStopping(brake);
   Inertial.calibrate();
   drawGUI();
+  drawGUIController();
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -155,7 +221,7 @@ void pre_auton(void) {
 void autonomous(void) {
   waitUntil(!Inertial.isCalibrating());
   forwardPID(500, 25);
-  /*if (autonType == 1 || autonType == 2) {
+  if (autonType == 1 || autonType == 2) {
     move_for(13, 40,  true);
     task::sleep(2000);
     std::cout << "mank" << std::endl;
@@ -175,7 +241,19 @@ void autonomous(void) {
     } else {
       RollerMotor.spinFor(reverse, 160, degrees);
     }
-  }*/
+  } else if (autonType == 5) {
+    Inertial.setHeading(90, degrees);
+    move_for(13, 40, true);
+    turn_to(180);
+    move_for(6, 40, false);
+    task::sleep(2000);
+    RollerMotor.spinFor(forward, 270, degrees, true);
+    move_for(-10, 40, true);
+    turn_to(270);
+    move_for(15, 40, false);
+    task::sleep(2500);
+    RollerMotor.spinFor(forward, 270, degrees, true);
+  }
 }  
 
 /*---------------------------------------------------------------------------*/
@@ -193,7 +271,7 @@ void usercontrol(void) {
   int threshold = 15;
   while (1) {
     int x = -Controller1.Axis3.position(percent);
-    int y = -Controller1.Axis1.position(percent);
+    int y = -Controller1.Axis1.position(percent) * .75;
     
     if (x >= -threshold && x <= threshold) {
       x = 0;
@@ -203,6 +281,8 @@ void usercontrol(void) {
 
     if (Controller1.ButtonL1.pressing()) {
       CataMotor.spin(forward, 100, rpm);
+    } else if (!firingCata) {
+      CataMotor.stop();
     }
 
     int leftSpeed = y + x;
