@@ -217,6 +217,22 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+void skills() {
+  Inertial.setHeading(90, degrees);
+  move_for(13, 40, true);
+  turn_to(180);
+  move_for(6, 40, false);
+  task::sleep(2000);
+  RollerMotor.spinFor(forward, 270, degrees, true);
+  move_for(-10, 40, true);
+  turn_to(270);
+  move_for(15, 40, false);
+  task::sleep(2500);
+  RollerMotor.spinFor(forward, 270, degrees, true);
+  move_for(-15, 40, true);
+  turn_to(45);
+}
+
 // This runs in autonomous
 void autonomous(void) {
   waitUntil(!Inertial.isCalibrating());
@@ -242,17 +258,7 @@ void autonomous(void) {
       RollerMotor.spinFor(reverse, 160, degrees);
     }
   } else if (autonType == 5) {
-    Inertial.setHeading(90, degrees);
-    move_for(13, 40, true);
-    turn_to(180);
-    move_for(6, 40, false);
-    task::sleep(2000);
-    RollerMotor.spinFor(forward, 270, degrees, true);
-    move_for(-10, 40, true);
-    turn_to(270);
-    move_for(15, 40, false);
-    task::sleep(2500);
-    RollerMotor.spinFor(forward, 270, degrees, true);
+    skills();
   }
 }  
 
