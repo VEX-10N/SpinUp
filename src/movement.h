@@ -58,10 +58,6 @@ void move_for(double distance, int speed,bool waitForCompletion) {
   RightBack.spinFor(forward, gear * M_PI * 4 * distance, degrees, speed, rpm, waitForCompletion);
 }
 
-void move_for_sensor(double distance) {
-  
-}
-
 void turn_to(double desired, double errorCap) {
   double error = calculateError(Inertial.heading(degrees), desired);
   while (fabs(error) > 8) {

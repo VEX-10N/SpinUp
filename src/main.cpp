@@ -244,26 +244,31 @@ void pre_auton(void) {
 
 void skills() {
   RollerMotor.spinFor(forward, 120, degrees, true);
+  task::sleep(500);
   move_for(-12, 40, true);
   task::sleep(500);
   turn_to(90, 5);
+  task::sleep(500);
   move_for(12, 40, false);
   task::sleep(2500);
   RollerMotor.spinFor(forward, 120, degrees, true);
   task::sleep(500);
   move_for(-12, 40, true);
   task::sleep(500);
-  turn_to(225, 5);
+  turn_to(225, 1);
   task::sleep(500);
   move_for(50, 40, true);
   task::sleep(500);
   turn_to(180, 5);
+  task::sleep(500);
   move_for(30, 40, false);
   task::sleep(5000);
   RollerMotor.spinFor(forward, 120, degrees, true);
   task::sleep(500);
-  move_for(-8, 30, true);
+  move_for(-12, 30, true);
+  task::sleep(500);
   turn_to(270, 5);
+  task::sleep(500);
   move_for(15, 30, false);
   task::sleep(2500);
   RollerMotor.spinFor(forward, 120, degrees, true);
@@ -277,8 +282,7 @@ void autonomous(void) {
   if (autonType == 1 || autonType == 2) {
     move_for(13, 40,  true);
     task::sleep(2000);
-    std::cout << "mank" << std::endl;
-    turn_to(90, 10);
+    turn_to(90, 5);
     task::sleep(2000);
     move_for(4, 10, false);
     task::sleep(2000);
@@ -288,7 +292,8 @@ void autonomous(void) {
       RollerMotor.spinFor(reverse, 160, degrees);
     }
   } if (autonType == 3 || autonType == 4) {
-    task::sleep(2000);
+    move_for(2, 20, false);
+    task::sleep(4000);
     if (autonType == 3) {
       RollerMotor.spinFor(forward, 160, degrees);
     } else {
