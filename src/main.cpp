@@ -24,6 +24,33 @@
 // DigitalInB           digital_in    B               
 // Inertial             inertial      3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
+
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
@@ -79,7 +106,7 @@ bool selectingAuton = true;
 bool firingCata = false;
 double initialDegree;
 int autonType = 5;
-directionType rollerDirection = fwd;
+directionType rollerDirection = reverse;
 
 void fire_cata() {
   firingCata = true;
@@ -126,8 +153,6 @@ void drawGUI() {
   }
   Brain.Screen.drawCircle(150, 150, 50);
   Brain.Screen.setFillColor(transparent);
-  std::ostringstream ss;
-  ss << autonType;
   if (autonType == 1) Brain.Screen.printAt(150, 80, "1");
   if (autonType == 2) Brain.Screen.printAt(150, 80, "2");
   if (autonType == 3) Brain.Screen.printAt(150, 80, "3");
@@ -218,30 +243,42 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void skills() {
-  Inertial.setHeading(90, degrees);
-  move_for(13, 40, true);
-  turn_to(180);
-  move_for(6, 40, false);
-  task::sleep(2000);
-  RollerMotor.spinFor(forward, 270, degrees, true);
-  move_for(-10, 40, true);
-  turn_to(270);
-  move_for(15, 40, false);
+  RollerMotor.spinFor(forward, 120, degrees, true);
+  move_for(-12, 40, true);
+  task::sleep(500);
+  turn_to(90, 5);
+  move_for(12, 40, false);
   task::sleep(2500);
-  RollerMotor.spinFor(forward, 270, degrees, true);
-  move_for(-15, 40, true);
-  turn_to(45);
+  RollerMotor.spinFor(forward, 120, degrees, true);
+  task::sleep(500);
+  move_for(-12, 40, true);
+  task::sleep(500);
+  turn_to(225, 5);
+  task::sleep(500);
+  move_for(50, 40, true);
+  task::sleep(500);
+  turn_to(180, 5);
+  move_for(30, 40, false);
+  task::sleep(5000);
+  RollerMotor.spinFor(forward, 120, degrees, true);
+  task::sleep(500);
+  move_for(-8, 30, true);
+  turn_to(270, 5);
+  move_for(15, 30, false);
+  task::sleep(2500);
+  RollerMotor.spinFor(forward, 120, degrees, true);
+  task::sleep(500);
+  move_for(-6, 30, true);
 }
 
 // This runs in autonomous
 void autonomous(void) {
   waitUntil(!Inertial.isCalibrating());
-  forwardPID(500, 25);
   if (autonType == 1 || autonType == 2) {
     move_for(13, 40,  true);
     task::sleep(2000);
     std::cout << "mank" << std::endl;
-    turn_to(90);
+    turn_to(90, 10);
     task::sleep(2000);
     move_for(4, 10, false);
     task::sleep(2000);
