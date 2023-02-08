@@ -1,8 +1,22 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
 #include <sstream>
 #include <iostream>
 #include "pid.h"
+#include "util.h"
 
 using namespace vex;
 
@@ -36,6 +50,7 @@ void fire_cata() {
   std::cout << DigitalInB.value() << std::endl;
   waitUntil(DigitalInB.value() == 0);
   CataMotor.stop();
+  CataMotor.spinFor(forward, 20, degrees, true);
   firingCata = false;
 }
 
@@ -45,13 +60,13 @@ void change_roller_direction() {
   } else if (rollerDirection == reverse) {
     rollerDirection = fwd;
   }
-  RollerMotor.spin(rollerDirection, 200, rpm);
+  RollerMotor.spin(rollerDirection, 100, rpm);
 }
 
 void start_stop_roller() {
   rollerRunning = !rollerRunning;
   if (rollerRunning) {
-    RollerMotor.spin(rollerDirection, 200, rpm);
+    RollerMotor.spin(rollerDirection, 100, rpm);
   } else {
     RollerMotor.stop();
   }
@@ -164,37 +179,23 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void skills() {
-  RollerMotor.spinFor(forward, 120, degrees, true);
+  move_for(5, 10, false);
+  task::sleep(2000);
+  RollerMotor.spinFor(forward, 180, degrees, true);
   task::sleep(500);
   move_for(-12, 40, true);
   task::sleep(500);
   turn_to(90, 5);
   task::sleep(500);
-  move_for(12, 40, false);
-  task::sleep(2500);
-  RollerMotor.spinFor(forward, 120, degrees, true);
-  task::sleep(500);
-  move_for(-12, 40, true);
-  task::sleep(500);
-  turn_to(225, 1);
-  task::sleep(500);
-  move_for(50, 40, true);
-  task::sleep(500);
-  turn_to(180, 5);
-  task::sleep(500);
-  move_for(30, 40, false);
-  task::sleep(5000);
-  RollerMotor.spinFor(forward, 120, degrees, true);
-  task::sleep(500);
-  move_for(-12, 30, true);
-  task::sleep(500);
-  turn_to(270, 5);
-  task::sleep(500);
   move_for(15, 30, false);
   task::sleep(2500);
-  RollerMotor.spinFor(forward, 120, degrees, true);
+  RollerMotor.spinFor(forward, 180, degrees, true);
   task::sleep(500);
-  move_for(-6, 30, true);
+  move_for(-7, 20, true);
+  task::sleep(500);
+  turn_to(0, 5);
+  task::sleep(500);
+  move_for(3, 20, true);
 }
 
 // This runs in autonomous
@@ -208,17 +209,17 @@ void autonomous(void) {
     move_for(4, 10, false);
     task::sleep(2000);
     if (autonType == 1) {
-      RollerMotor.spinFor(forward, 160, degrees);
+      RollerMotor.spinFor(forward, 90, degrees);
     } else {
-      RollerMotor.spinFor(reverse, 160, degrees);
+      RollerMotor.spinFor(reverse, 90, degrees);
     }
   } if (autonType == 3 || autonType == 4) {
     move_for(2, 20, false);
     task::sleep(4000);
     if (autonType == 3) {
-      RollerMotor.spinFor(forward, 160, degrees);
+      RollerMotor.spinFor(forward, 90, degrees);
     } else {
-      RollerMotor.spinFor(reverse, 160, degrees);
+      RollerMotor.spinFor(reverse, 90, degrees);
     }
   } else if (autonType == 5) {
     skills();
@@ -257,10 +258,10 @@ void usercontrol(void) {
     int leftSpeed = y + x;
     int rightSpeed = y - x;
 
-    LeftFront.setVelocity(leftSpeed * .65, rpm);
-    LeftBack.setVelocity(leftSpeed * .65, rpm);
-    RightFront.setVelocity(rightSpeed * .65, rpm);
-    RightBack.setVelocity(rightSpeed * .65, rpm);
+    LeftFront.setVelocity(leftSpeed, rpm);
+    LeftBack.setVelocity(leftSpeed, rpm);
+    RightFront.setVelocity(rightSpeed, rpm);
+    RightBack.setVelocity(rightSpeed, rpm);
 
     LeftFront.spin(reverse);
     LeftBack.spin(reverse);
