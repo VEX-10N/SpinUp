@@ -187,15 +187,15 @@ void skills() {
   task::sleep(500);
   turn_to(90, 5);
   task::sleep(500);
-  move_for(15, 30, false);
+  move_for(16, 30, false);
   task::sleep(2500);
   RollerMotor.spinFor(forward, 180, degrees, true);
   task::sleep(500);
-  move_for(-7, 20, true);
+  move_for(-8, 20, true);
   task::sleep(500);
   turn_to(0, 5);
   task::sleep(500);
-  move_for(3, 20, true);
+  move_for(6, 20, true);
 }
 
 // This runs in autonomous
