@@ -12,6 +12,7 @@ extern motor LeftFront;
 extern motor LeftBack;
 extern digital_in DigitalInB;
 extern inertial Inertial;
+extern digital_out DigitalOutC;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

@@ -10,6 +10,20 @@
 // LeftBack             motor         20              
 // DigitalInB           digital_in    B               
 // Inertial             inertial      3               
+// DigitalOutC          digital_out   C               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// CataMotor            motor         10              
+// RollerMotor          motor         5               
+// RightFront           motor         17              
+// RightBack            motor         19              
+// LeftFront            motor         18              
+// LeftBack             motor         20              
+// DigitalInB           digital_in    B               
+// Inertial             inertial      3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <string>
@@ -70,6 +84,12 @@ void start_stop_roller() {
   } else {
     RollerMotor.stop();
   }
+}
+
+void fire_expansion() {
+  DigitalOutC.set(true);
+  task::sleep(5000);
+  DigitalOutC.set(false);
 }
 
 void drawGUI() {
@@ -156,6 +176,7 @@ void pre_auton(void) {
   Controller1.ButtonL2.pressed(fire_cata);
   Controller1.ButtonA.pressed(increaseAutonMode);
   Controller1.ButtonX.pressed(lockInAutonMode);
+  Controller1.ButtonUp.pressed(fire_expansion);
   Brain.Screen.pressed(screenPressed);
   LeftFront.setStopping(brake);
   LeftBack.setStopping(brake);
